@@ -50,8 +50,8 @@ Not sure about something? Everything the installer does is listed in [section 3]
 Open a terminal and run these one at a time:
 
 ```bash
-# 1. Download this repo (replace YOUR-USERNAME with your GitHub name)
-git clone https://github.com/YOUR-USERNAME/ii-mods.git
+# 1. Download this repo
+git clone https://github.com/Spont-427/ii-mods.git
 cd ii-mods
 
 # 2. See which mods are available
@@ -288,7 +288,7 @@ git init
 git add .
 git commit -m "Initial commit: installer and hotspot-toggle mod"
 git branch -M main
-git remote add origin https://github.com/YOUR-USERNAME/ii-mods.git
+git remote add origin https://github.com/Spont-427/ii-mods.git
 git push -u origin main
 ```
 
