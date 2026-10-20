@@ -180,3 +180,26 @@ config_toggle() {
   snapshot_file "$mod" "$II_CONFIG"
   python3 "$LIB_DIR/json_toggle.py" "$action" "$II_CONFIG" "$type" ${after:+"$after"}
 }
+
+# inject_qml_child <mod> <file> <id> <snippet_file>
+# Appends a child object at the end of the root object of a QML file.
+inject_qml_child() {
+  local mod=$1 file=$2 ident=$3 snippet=$4
+  need_file "$file"
+  if grep -q "ii-mods:$ident begin" "$file"; then
+    ok "$(basename "$file") already patched for '$ident'"
+    return 0
+  fi
+  snapshot_file "$mod" "$file"
+  python3 "$LIB_DIR/qml_inject.py" "$file" "$ident" "$snippet" >/dev/null
+  ok "patched $(basename "$file") with '$ident'"
+}
+
+uninject_qml_child() {
+  local file=$1 ident=$2
+  [[ -f $file ]] || return 0
+  if grep -q "ii-mods:$ident begin" "$file"; then
+    sed -i "/ii-mods:$ident begin/,/ii-mods:$ident end/d" "$file"
+    ok "removed '$ident' from $(basename "$file")"
+  fi
+}
