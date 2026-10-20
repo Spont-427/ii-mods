@@ -1,0 +1,6 @@
+# Never commit personal settings or secrets
+hotspot.conf
+*.conf.local
+*.bak
+*.tmp
+.DS_Store

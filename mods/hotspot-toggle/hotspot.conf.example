@@ -1,0 +1,7 @@
+# Copy of the settings file the installer creates at ~/.config/ii-mods/hotspot.conf
+# Never commit your real password to GitHub.
+
+WIFI_IFACE="wlan0"      # the Wi-Fi card that broadcasts the hotspot (see: iw dev)
+INET_IFACE="wlan0"      # the interface that has internet (same as above to share Wi-Fi over Wi-Fi)
+SSID="Hyprland"         # network name other devices will see
+PASSWORD=""             # 8 to 63 characters

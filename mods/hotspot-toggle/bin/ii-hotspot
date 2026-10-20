@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+# ii-hotspot — tiny wrapper around create_ap, used by the hotspot quick toggle.
+#
+#   ii-hotspot start    start the hotspot (as a background daemon)
+#   ii-hotspot stop     stop it
+#   ii-hotspot status   exit 0 if it is running, 1 if not
+#
+# Settings (network name, password, interfaces) live in
+#   ~/.config/ii-mods/hotspot.conf
+# so your password is never stored in the git repo.
+
+CONF="${XDG_CONFIG_HOME:-$HOME/.config}/ii-mods/hotspot.conf"
+# shellcheck source=/dev/null
+[[ -r $CONF ]] && source "$CONF"
+
+WIFI_IFACE="${WIFI_IFACE:-wlan0}"
+INET_IFACE="${INET_IFACE:-$WIFI_IFACE}"
+SSID="${SSID:-Hyprland}"
+PASSWORD="${PASSWORD:-}"
+
+notify() {
+  command -v notify-send >/dev/null 2>&1 && notify-send -a Shell "Hotspot" "$1"
+  echo "ii-hotspot: $1" >&2
+}
+
+# create_ap is a bash script, so a running instance looks like
+# "/bin/bash /usr/bin/create_ap ...". The [c] trick stops pgrep matching itself.
+is_running() { pgrep -f '/[c]reate_ap( |$)' >/dev/null 2>&1; }
+
+case "${1:-}" in
+  start)
+    is_running && exit 0
+    if ((${#PASSWORD} < 8)); then
+      notify "Set a password (8+ characters) in $CONF"
+      exit 2
+    fi
+    if ! sudo -n create_ap --daemon "$WIFI_IFACE" "$INET_IFACE" "$SSID" "$PASSWORD" >/dev/null 2>&1; then
+      notify "Could not start. Is create_ap installed and the sudoers rule in place? (see the mod README)"
+      exit 1
+    fi
+    ;;
+  stop)
+    is_running || exit 0
+    if sudo -n create_ap --stop "$WIFI_IFACE" >/dev/null 2>&1; then exit 0; fi
+    # fallback: stop by PID taken from create_ap's own list
+    pid=$(sudo -n create_ap --list-running 2>/dev/null | awk '$1 ~ /^[0-9]+$/ {print $1; exit}')
+    if [[ -n $pid ]] && sudo -n create_ap --stop "$pid" >/dev/null 2>&1; then exit 0; fi
+    notify "Could not stop the hotspot. Try: sudo create_ap --list-running"
+    exit 1
+    ;;
+  status)
+    is_running
+    ;;
+  *)
+    echo "usage: ii-hotspot {start|stop|status}" >&2
+    exit 64
+    ;;
+esac
