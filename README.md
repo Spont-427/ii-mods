@@ -26,6 +26,7 @@ Each mod lives in its own folder under `mods/`, and one script installs or remov
 7. [Uninstall](#7-uninstall)
 8. [Troubleshooting](#8-troubleshooting)
 9. [Adding your own mods](#9-adding-your-own-mods)
+10. [Repo layout](#10-repo-layout)
 
 ---
 
@@ -272,7 +273,28 @@ Never put passwords, tokens or personal data in a mod. Read them from a file in 
 
 ---
 
+## 10. Repo layout
 
+```
+ii-mods/
+├── install.sh                 ← install / uninstall / list mods
+├── lib/
+│   ├── helpers.sh             ← shared functions (backups, patching, prompts)
+│   ├── patch_chooser.py       ← adds a tile type to the sidebar chooser
+│   └── json_toggle.py         ← adds/removes a toggle in config.json
+├── scripts/
+│   └── new-mod.sh             ← scaffold a new mod
+├── mods/
+│   ├── _template/             ← starting point for new mods
+│   └── hotspot-toggle/
+│       ├── mod.sh
+│       ├── README.md
+│       ├── hotspot.conf.example
+│       ├── bin/ii-hotspot
+│       └── files/modules/common/models/quickToggles/HotspotToggle.qml
+├── LICENSE
+└── README.md
+```
 
 ---
 
