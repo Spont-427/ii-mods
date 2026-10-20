@@ -26,8 +26,6 @@ Each mod lives in its own folder under `mods/`, and one script installs or remov
 7. [Uninstall](#7-uninstall)
 8. [Troubleshooting](#8-troubleshooting)
 9. [Adding your own mods](#9-adding-your-own-mods)
-10. [Putting this repo on GitHub](#10-putting-this-repo-on-github)
-11. [Repo layout](#11-repo-layout)
 
 ---
 
@@ -274,63 +272,7 @@ Never put passwords, tokens or personal data in a mod. Read them from a file in 
 
 ---
 
-## 10. Putting this repo on GitHub
 
-One-time setup, from inside the `ii-mods` folder.
-
-**Option A: with the GitHub website**
-
-1. Go to <https://github.com/new>, name the repo `ii-mods`, leave it empty (no README, no license), and click **Create repository**.
-2. In your terminal:
-
-```bash
-git init
-git add .
-git commit -m "Initial commit: installer and hotspot-toggle mod"
-git branch -M main
-git remote add origin https://github.com/Spont-427/ii-mods.git
-git push -u origin main
-```
-
-GitHub no longer accepts account passwords for `git push`. When asked, use a [personal access token](https://github.com/settings/tokens) as the password, or set up SSH keys (<https://docs.github.com/en/authentication>).
-
-**Option B: with the GitHub CLI**
-
-```bash
-sudo pacman -S github-cli
-gh auth login
-git init && git add . && git commit -m "Initial commit"
-gh repo create ii-mods --public --source=. --push
-```
-
-Before the first push, check that no secrets are in the folder: `grep -rn "PASSWORD=" . | grep -v example`. Your real settings live in `~/.config/ii-mods/`, outside the repo, and `.gitignore` also blocks `hotspot.conf`.
-
-Also open `LICENSE` and put your real name on it, or choose another license.
-
----
-
-## 11. Repo layout
-
-```
-ii-mods/
-├── install.sh                 ← install / uninstall / list mods
-├── lib/
-│   ├── helpers.sh             ← shared functions (backups, patching, prompts)
-│   ├── patch_chooser.py       ← adds a tile type to the sidebar chooser
-│   └── json_toggle.py         ← adds/removes a toggle in config.json
-├── scripts/
-│   └── new-mod.sh             ← scaffold a new mod
-├── mods/
-│   ├── _template/             ← starting point for new mods
-│   └── hotspot-toggle/
-│       ├── mod.sh
-│       ├── README.md
-│       ├── hotspot.conf.example
-│       ├── bin/ii-hotspot
-│       └── files/modules/common/models/quickToggles/HotspotToggle.qml
-├── LICENSE
-└── README.md
-```
 
 ---
 
